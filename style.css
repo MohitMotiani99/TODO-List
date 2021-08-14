@@ -1,0 +1,14 @@
+div[class='card text-center']{
+	margin-bottom: 70px;
+}
+button[class='btn btn-primary save']{
+	margin-right: 30px;
+}
+h5[class='card-title']{
+	border: solid;
+}
+p[class='card-text']{
+	border: dotted;
+	border-color: lightpink;
+
+}
