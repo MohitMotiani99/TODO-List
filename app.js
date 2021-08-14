@@ -1,8 +1,15 @@
+var styles=['bg-secondary','bg-success','bg-danger','bg-info','bg-dark']
+
+
+
 function newTask(title_content,text_content){
 	var list = document.getElementsByClassName('list-group')[0]
 
 	var card = document.createElement('div')
-	card.className+='card'
+
+	var type = Math.floor(Math.random() * 5)
+	console.log(type)
+	card.className+='card '+styles[type]+' text-white'
 	
 	var card_header = document.createElement('h5')
 	card_header.className+='card-header'
@@ -15,14 +22,14 @@ function newTask(title_content,text_content){
 	card_title.className+='card-title'
 	card_title.setAttribute('contenteditable','false')
 	card_title.innerHTML=title_content
-	card_title.setAttribute('placeholder','Task Name')
+	card_title.setAttribute('onclick','removePlaceholder(this)')
 	card_body.appendChild(card_title)
 
 	var card_text = document.createElement('p')
 	card_text.className+='card-text'
 	card_text.setAttribute('contenteditable','false')
 	card_text.innerHTML=text_content
-	card_text.setAttribute('placeholder','Task Brief')
+	card_text.setAttribute('onclick','removePlaceholder(this)')
 	card_body.appendChild(card_text)
 
 	var save = document.createElement('button')
@@ -117,4 +124,20 @@ function deletetask(card){
 	var list = document.getElementsByClassName('list-group')[0]
 
 	list.removeChild(card)	
+}
+function removePlaceholder(ele){
+	if(ele.className=='card-title'){
+		if(ele.innerHTML=='Add Title...')
+		{
+			ele.innerHTML=''
+			ele.focus()
+		}
+	}
+	else if(ele.className=='card-text'){
+		if(ele.innerHTML=='Add Text...')
+		{
+			ele.innerHTML=''
+			ele.focus()
+		}
+	}
 }
