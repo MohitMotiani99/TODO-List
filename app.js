@@ -1,5 +1,5 @@
-var styles=['bg-secondary','bg-success','bg-danger','bg-info','bg-dark']
-
+//var styles=['bg-secondary','bg-success','bg-danger','bg-info','bg-dark']
+var styles = ['border-secondary','border-success','border-danger','border-info']
 
 
 function newTask(title_content,text_content){
@@ -7,29 +7,28 @@ function newTask(title_content,text_content){
 
 	var card = document.createElement('div')
 
-	var type = Math.floor(Math.random() * 5)
-	console.log(type)
-	card.className+='card '+styles[type]+' text-white'
-	
-	var card_header = document.createElement('h5')
-	card_header.className+='card-header'
-	card.appendChild(card_header)
+	//var type = Math.floor(Math.random() * 5)
+	var type = Math.floor(Math.random() * 4)
+	//card.className+='card '+styles[type]+' text-white'
+	card.className+='card '+styles[type]+' mb-3'
 
 	var card_body = document.createElement('div')
 	card_body.className+='card-body'
 
-	var card_title = document.createElement('h5')
-	card_title.className+='card-title'
+	var card_title = document.createElement('h1')
+	card_title.className+='card-title text-'+styles[type].substring(7)
 	card_title.setAttribute('contenteditable','false')
 	card_title.innerHTML=title_content
-	card_title.setAttribute('onclick','removePlaceholder(this)')
+	card_title.setAttribute('onfocus','removePlaceholder(this)')
+	card_title.setAttribute('onfocusout','removePlaceholder(this)')
 	card_body.appendChild(card_title)
 
 	var card_text = document.createElement('p')
 	card_text.className+='card-text'
 	card_text.setAttribute('contenteditable','false')
 	card_text.innerHTML=text_content
-	card_text.setAttribute('onclick','removePlaceholder(this)')
+	card_text.setAttribute('onfocus','removePlaceholder(this)')
+	card_text.setAttribute('onfocusout','removePlaceholder(this)')
 	card_body.appendChild(card_text)
 
 	var save = document.createElement('button')
@@ -57,6 +56,7 @@ function newTask(title_content,text_content){
 	card_body.appendChild(deleteb)
 
 
+	card.style.transition='2s ease'
 	card.appendChild(card_body)
 
 	list.appendChild(card)
@@ -65,7 +65,7 @@ function newTask(title_content,text_content){
 
 }
 function save(card){
-	var card_body=card.children[1]
+	var card_body=card.children[0]
 	var card_title=card_body.children[0]
 	var card_text=card_body.children[1]
 
@@ -87,7 +87,7 @@ function save(card){
 }
 
 function update(card){
-	var card_body=card.children[1]
+	var card_body=card.children[0]
 	var card_title=card_body.children[0]
 	var card_text=card_body.children[1]
 
@@ -119,7 +119,7 @@ function gettasks(){
 	}
 }
 function deletetask(card){
-	var card_title_content = card.children[1].children[0].innerHTML
+	var card_title_content = card.children[0].children[0].innerHTML
 	localStorage.removeItem(card_title_content)
 	var list = document.getElementsByClassName('list-group')[0]
 
@@ -127,21 +127,124 @@ function deletetask(card){
 }
 function removePlaceholder(ele){
 
-	if(ele.nextSibling.nextSibling.style.display=='inline'){
-
-	if(ele.className=='card-title'){
+	if(ele.className.indexOf('card-title')==0 && ele.nextSibling.nextSibling.style.display=='inline'){
 		if(ele.innerHTML=='Add Title...')
 		{
 			ele.innerHTML=''
 			ele.focus()
 		}
+		else if(ele.innerHTML==''){
+			ele.innerHTML='Add Title...'
+		}
 	}
-	else if(ele.className=='card-text'){
+	else if(ele.className=='card-text' && ele.nextSibling.style.display=='inline'){
 		if(ele.innerHTML=='Add Text...')
 		{
 			ele.innerHTML=''
 			ele.focus()
 		}
+		else if(ele.innerHTML==''){
+			ele.innerHTML='Add Text...'
+		}
 	}
-   }
+
+}
+function showFind(){
+	var find_sec = document.getElementById('find_sec')
+	if(find_sec.style.display=='none')
+		find_sec.style.display='inline'
+	else
+		find_sec.style.display='none'
+}
+function findTasks(){
+	var word = document.getElementById('word')
+	var word_value = word.value
+
+
+	find(word_value)
+}
+function find(word){
+	var list = document.getElementsByClassName('list-group')[0]
+	for(let i=0;i<list.children.length;i++){
+		list.children[i].children[0].children[0].setAttribute('contenteditable','true')
+		var card_title_content = list.children[i].children[0].children[0].innerHTML
+		//console.log(card_title_content)
+		//console.log(sessionStorage.getItem(card_title_content))
+		if(sessionStorage.getItem(card_title_content)!=null)
+		{
+			console.log(card_title_content)
+			list.children[i].children[0].children[0].innerHTML=sessionStorage.getItem(card_title_content)
+			card_title_content=sessionStorage.getItem(card_title_content)
+			console.log(card_title_content)
+		}
+		var card_title_content_marked = mark(card_title_content,word)
+		sessionStorage.setItem(card_title_content_marked,card_title_content)
+
+		list.children[i].children[0].children[0].innerHTML=card_title_content_marked
+		list.children[i].children[0].children[0].setAttribute('contenteditable','false')
+
+
+
+		list.children[i].children[0].children[1].setAttribute('contenteditable','true')
+		var card_text_content = list.children[i].children[0].children[1].innerHTML
+		//console.log(card_title_content)
+		//console.log(sessionStorage.getItem(card_title_content))
+		if(sessionStorage.getItem(card_text_content)!=null)
+		{
+			console.log(card_text_content)
+			list.children[i].children[0].children[1].innerHTML=sessionStorage.getItem(card_text_content)
+			card_text_content=sessionStorage.getItem(card_text_content)
+			console.log(card_title_content)
+		}
+		var card_text_content_marked = mark(card_text_content,word)
+		sessionStorage.setItem(card_text_content_marked,card_text_content)
+
+		list.children[i].children[0].children[1].innerHTML=card_text_content_marked
+		list.children[i].children[0].children[1].setAttribute('contenteditable','false')
+
+	}
+}
+function mark(str,word){
+	var i=-1;
+	var ids=[]
+	while((i=str.indexOf(word,i+1))!=-1){
+		ids.push(i)
+	}
+
+	var str_new = ''
+	var j=0
+	for(i=0;i<ids.length && j<str.length;j++){
+		if(j==ids[i]){
+			str_new+='<mark style=\"background-color:yellow\">'
+			str_new+=word
+			str_new+='</mark>'
+
+			j+=(word.length-1)
+			i++;
+		}
+		else
+			str_new+=str[j]
+	}
+
+	while(j!=str.length){
+		str_new+=str[j];
+		j++;
+	}
+	return str_new
+}
+function removeTasks(){
+	var list = document.getElementsByClassName('list-group')[0]
+	document.getElementById('remove_done').style.display='inline'
+	for(let i=0;i<list.children.length;i++){
+		list.children[i].children[0].children[3].style.display='none'
+		list.children[i].children[0].children[4].style.display='inline'
+	}
+}
+function removeTasksDone(){
+	var list = document.getElementsByClassName('list-group')[0]
+	for(let i=0;i<list.children.length;i++){
+		list.children[i].children[0].children[3].style.display='inline'
+		list.children[i].children[0].children[4].style.display='none'
+	}
+	document.getElementById('remove_done').style.display='none'
 }

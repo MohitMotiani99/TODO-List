@@ -24,11 +24,22 @@
 				<div class="card-body">
 					<h1 class="card-title first">Cash Routine</h1>
 					<button type="button" class="btn btn-warning" onclick="newTask('Add Title...','Add Text...')">New Task</button>
+					<button type="button" class="btn btn-warning" onclick="showFind()">Find Tasks</button>
+					<button type="button" class="btn btn-warning" onclick="removeTasks()">Remove Tasks</button>
+
 				</div>
+
+				<div class="card bg-dark" id="find_sec" style="display:none;margin-top: 20px;">
+						<div class="card-body">
+							<input type="text" id='word' placeholder="Enter the word to find..."><br>
+							<button type="button" class="btn btn-primary" onclick="findTasks()">Find</button>
+						</div>
+				</div>
+
 		</div>
 
 		<div class="list-group"></div>
-
+		<button type="button" id="remove_done" class="btn btn-warning btn-lg btn-block" style="display: none;" onclick="removeTasksDone()">Done</button>
 	</div>
 </body>
 </html>

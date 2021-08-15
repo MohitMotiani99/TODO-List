@@ -4,17 +4,23 @@ div[class='card text-center']{
 button[class='btn btn-primary save']{
 	margin-right: 30px;
 }
-h5[class='card-title']{
+div[class='list-group'] h1[class='card-title']{
 	border: solid;
 }
 p[class='card-text']{
-
-}
-p[class='card-text']{
-	border: dotted;
+	border: outset;
 	border-color: lightpink;
+	font-family: cursive;
+	font-size: 20px;
 }
 div[class='list-group'] div{
 	margin-bottom: 20px;
 	margin-top: 20px;
+	border-width: 5px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+div[class='list-group'] div{
+	transition: display 2s;
+	transition-timing-function: ease-in-out;
 }
