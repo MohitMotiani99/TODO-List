@@ -126,6 +126,9 @@ function deletetask(card){
 	list.removeChild(card)	
 }
 function removePlaceholder(ele){
+
+	if(ele.nextSibling.nextSibling.style.display=='inline'){
+
 	if(ele.className=='card-title'){
 		if(ele.innerHTML=='Add Title...')
 		{
@@ -140,4 +143,5 @@ function removePlaceholder(ele){
 			ele.focus()
 		}
 	}
+   }
 }
