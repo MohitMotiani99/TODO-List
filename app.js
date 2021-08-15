@@ -16,12 +16,32 @@ function newTask(title_content,text_content){
 	card_body.className+='card-body'
 
 	var card_title = document.createElement('h1')
+
 	card_title.className+='card-title text-'+styles[type].substring(7)
 	card_title.setAttribute('contenteditable','false')
 	card_title.innerHTML=title_content
 	card_title.setAttribute('onfocus','removePlaceholder(this)')
 	card_title.setAttribute('onfocusout','removePlaceholder(this)')
 	card_body.appendChild(card_title)
+
+
+	
+
+	// var timei = document.createElement('input')
+	// timei.setAttribute('type','time')
+	// card_body.appendChild(timei)
+
+	var datei = document.createElement('input')
+	datei.setAttribute('type','date')
+	card_body.appendChild(datei)
+
+	var schedule = document.createElement('button')
+	schedule.setAttribute('type','button')
+	schedule.className+='btn btn-info'
+	schedule.innerHTML='Set Event'
+	schedule.style.display='none'
+	schedule.setAttribute('onclick','showCalender(this.previousSibling)')
+	card_body.appendChild(schedule)
 
 	var card_text = document.createElement('p')
 	card_text.className+='card-text'
@@ -55,7 +75,6 @@ function newTask(title_content,text_content){
 	deleteb.setAttribute('onclick','deletetask(this.parentNode.parentNode)')
 	card_body.appendChild(deleteb)
 
-
 	card.style.transition='2s ease'
 	card.appendChild(card_body)
 
@@ -67,11 +86,11 @@ function newTask(title_content,text_content){
 function save(card){
 	var card_body=card.children[0]
 	var card_title=card_body.children[0]
-	var card_text=card_body.children[1]
+	var card_text=card_body.children[3]
 
-	var save = card_body.children[2]
-	var update = card_body.children[3]
-	var deleteb = card_body.children[4]
+	var save = card_body.children[4]
+	var update = card_body.children[5]
+	var deleteb = card_body.children[6]
 
 	save.style.display='none'
 	update.style.display='inline'
@@ -89,11 +108,11 @@ function save(card){
 function update(card){
 	var card_body=card.children[0]
 	var card_title=card_body.children[0]
-	var card_text=card_body.children[1]
+	var card_text=card_body.children[3]
 
-	var save = card_body.children[2]
-	var update = card_body.children[3]
-	var deleteb = card_body.children[4]
+	var save = card_body.children[4]
+	var update = card_body.children[5]
+	var deleteb = card_body.children[6]
 
 	save.style.display='inline'
 	update.style.display='none'
@@ -127,7 +146,7 @@ function deletetask(card){
 }
 function removePlaceholder(ele){
 
-	if(ele.className.indexOf('card-title')==0 && ele.nextSibling.nextSibling.style.display=='inline'){
+	if(ele.className.indexOf('card-title')==0 && ele.parentNode.children[4].style.display=='inline'){
 		if(ele.innerHTML=='Add Title...')
 		{
 			ele.innerHTML=''
@@ -137,7 +156,7 @@ function removePlaceholder(ele){
 			ele.innerHTML='Add Title...'
 		}
 	}
-	else if(ele.className=='card-text' && ele.nextSibling.style.display=='inline'){
+	else if(ele.className=='card-text' && ele.parentNode.children[4].style.display=='inline'){
 		if(ele.innerHTML=='Add Text...')
 		{
 			ele.innerHTML=''
@@ -153,15 +172,29 @@ function showFind(){
 	var find_sec = document.getElementById('find_sec')
 	if(find_sec.style.display=='none')
 		find_sec.style.display='inline'
-	else
+	else{
 		find_sec.style.display='none'
+		var list = document.getElementsByClassName('list-group')[0]
+		for(let i=0;i<list.children.length;i++){
+			list.children[i].children[0].children[0].innerHTML=sessionStorage.getItem(list.children[i].children[0].children[0].innerHTML)
+			list.children[i].children[0].children[3].innerHTML=sessionStorage.getItem(list.children[i].children[0].children[3].innerHTML)
+		}
+	}
 }
 function findTasks(){
 	var word = document.getElementById('word')
 	var word_value = word.value
 
-
+	if(word_value!=null && word_value!='')
 	find(word_value)
+
+	if(word_value==null || word_value==''){
+		var list = document.getElementsByClassName('list-group')[0]
+		for(let i=0;i<list.children.length;i++){
+			list.children[i].children[0].children[0].innerHTML=sessionStorage.getItem(list.children[i].children[0].children[0].innerHTML)
+			list.children[i].children[0].children[3].innerHTML=sessionStorage.getItem(list.children[i].children[0].children[3].innerHTML)
+		}	
+	}
 }
 function find(word){
 	var list = document.getElementsByClassName('list-group')[0]
@@ -185,22 +218,22 @@ function find(word){
 
 
 
-		list.children[i].children[0].children[1].setAttribute('contenteditable','true')
-		var card_text_content = list.children[i].children[0].children[1].innerHTML
+		list.children[i].children[0].children[3].setAttribute('contenteditable','true')
+		var card_text_content = list.children[i].children[0].children[3].innerHTML
 		//console.log(card_title_content)
 		//console.log(sessionStorage.getItem(card_title_content))
 		if(sessionStorage.getItem(card_text_content)!=null)
 		{
 			console.log(card_text_content)
-			list.children[i].children[0].children[1].innerHTML=sessionStorage.getItem(card_text_content)
+			list.children[i].children[0].children[3].innerHTML=sessionStorage.getItem(card_text_content)
 			card_text_content=sessionStorage.getItem(card_text_content)
 			console.log(card_title_content)
 		}
 		var card_text_content_marked = mark(card_text_content,word)
 		sessionStorage.setItem(card_text_content_marked,card_text_content)
 
-		list.children[i].children[0].children[1].innerHTML=card_text_content_marked
-		list.children[i].children[0].children[1].setAttribute('contenteditable','false')
+		list.children[i].children[0].children[3].innerHTML=card_text_content_marked
+		list.children[i].children[0].children[3].setAttribute('contenteditable','false')
 
 	}
 }
@@ -236,15 +269,21 @@ function removeTasks(){
 	var list = document.getElementsByClassName('list-group')[0]
 	document.getElementById('remove_done').style.display='inline'
 	for(let i=0;i<list.children.length;i++){
-		list.children[i].children[0].children[3].style.display='none'
-		list.children[i].children[0].children[4].style.display='inline'
+		list.children[i].children[0].children[5].style.display='none'
+		list.children[i].children[0].children[6].style.display='inline'
 	}
 }
 function removeTasksDone(){
 	var list = document.getElementsByClassName('list-group')[0]
 	for(let i=0;i<list.children.length;i++){
-		list.children[i].children[0].children[3].style.display='inline'
-		list.children[i].children[0].children[4].style.display='none'
+		list.children[i].children[0].children[5].style.display='inline'
+		list.children[i].children[0].children[6].style.display='none'
 	}
 	document.getElementById('remove_done').style.display='none'
+}
+function showCalender(cal){
+	if(cal.style.display=='none')
+		cal.style.display='inline-block'
+	else
+		cal.style.display='none'
 }

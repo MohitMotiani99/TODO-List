@@ -12,6 +12,7 @@ p[class='card-text']{
 	border-color: lightpink;
 	font-family: cursive;
 	font-size: 20px;
+	margin-top: 20px;
 }
 div[class='list-group'] div{
 	margin-bottom: 20px;
@@ -23,4 +24,7 @@ div[class='list-group'] div{
 div[class='list-group'] div{
 	transition: display 2s;
 	transition-timing-function: ease-in-out;
+}
+input[type='date']{
+	display: none;
 }
